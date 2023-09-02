@@ -19,7 +19,7 @@ function Footer() {
           <span><a href="https://www.facebook.com/khalil.andolsi.161" target='_blanck'><span><i className="fa-brands fa-facebook-f fa-1x"></i></span></a></span>
           <span><a href="https://www.instagram.com/khalil_0110_" target='_blanck'><span><i className="fa-brands fa-instagram fa-1x"></i></span></a></span>
           <span><a href="https://github.com/KhalilAndolsi" target='_blanck'><span><i className="fa-brands fa-github fa-1x"></i></span></a></span>
-          <span><a href="mailto:khalilandolsi0110@gmail.com"><span><i className="fa-solid fa-envelope fa-1x"></i></span></a></span>
+          <span><a href="mailto:khalil.andolssi@gmail.com"><span><i className="fa-solid fa-envelope fa-1x"></i></span></a></span>
         </div>
     </footer>
   )

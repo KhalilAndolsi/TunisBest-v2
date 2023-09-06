@@ -13,7 +13,6 @@
 }
 
 .coverCarousel .item .bg {
-  z-index: -1;
   position: absolute;
   object-fit: cover;
   width: 100%;

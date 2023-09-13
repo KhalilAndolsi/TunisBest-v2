@@ -62,6 +62,7 @@ function TheSerie() {
       );
     }
   }
+
   return (
     <>
       <Header />
@@ -154,7 +155,8 @@ function TheSerie() {
               src={`https://autoembed.to/tv/tmdb/${data.id}-${s}-${ep}`}
               allowFullScreen
               title="movie"
-            ></iframe>
+              id="wFrame"
+            />
             {seasonData.length !== 0 ? (
               <div className="seasons">
                 <div className="top">
@@ -169,21 +171,28 @@ function TheSerie() {
                   ))}
                 </div>
                 <div className="down">
-                  {episodeData.length !== 0 ? (
-                    episodeData.episodes.map((d, i) => (
-                      <Link to={`/series/${id}/${s}/${d.episode_number}`} key={i}>
-                        <img
-                          src={`https://image.tmdb.org/t/p/w500${d.still_path}`}
-                          alt={`${d.name}`}
-                          width="50px"
-                        />
-                        <h3>{`${d.episode_number}) ${d.name}`}</h3>
-                        <button type="button" title="watched">
-                          <i className="fa-regular fa-eye"></i>
-                        </button>
-                      </Link>
-                    ))
-                  ) : undefined}
+                  {episodeData.length !== 0
+                    ? episodeData.episodes.map((d, i) => (
+                        <Link
+                          to={`/series/${id}/${s}/${d.episode_number}`}
+                          key={i}
+                          onClick={() => window.scrollTo({
+                            top: document.getElementById("wFrame").getBoundingClientRect().top - document.body.getBoundingClientRect().top,
+                            behavior: 'smooth',
+                          })}
+                        >
+                          <img
+                            src={`https://image.tmdb.org/t/p/w500${d.still_path}`}
+                            alt={`${d.name}`}
+                            width="50px"
+                          />
+                          <h3>{`${d.episode_number}) ${d.name}`}</h3>
+                          <button type="button" title="watched">
+                            <i className="fa-regular fa-eye"></i>
+                          </button>
+                        </Link>
+                      ))
+                    : undefined}
                 </div>
               </div>
             ) : undefined}

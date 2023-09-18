@@ -140,7 +140,7 @@ function TheSerie() {
                         <i className="fa-solid fa-xmark"></i>
                       </button>
                       <iframe
-                        src={`https://autoembed.to/trailer/tv/${data.id}`}
+                        src={`https://autoembed.to/tv/tmdb/${data.id}-1-1?trailer=1`}
                         title="trailer"
                         allowFullScreen
                       ></iframe>

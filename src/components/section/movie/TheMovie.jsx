@@ -117,7 +117,7 @@ function TheMovie() {
                         <i className="fa-solid fa-xmark"></i>
                       </button>
                       <iframe
-                        src={`https://autoembed.to/trailer/movie/${data.imdb_id}`}
+                        src={`https://autoembed.to/movie/imdb/${data.imdb_id}?trailer=1`}
                         title="trailer"
                         allowFullScreen
                       ></iframe>

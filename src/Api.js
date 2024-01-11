@@ -82,3 +82,17 @@ export const getSeasonData = async (id, season = 1) => {
     console.error(err)
   }
 };
+export const getTrailer = async (id, type) => {
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/${type}/${id}/videos?api_key=${process.env.REACT_APP_API_KEY}&language=en-US`);
+    const data = await response.json();
+    const urls = data.results.filter(item => item.type === "Trailer" && item.site === "YouTube")
+    if (urls) {
+      return urls[0].key
+    }else {
+      return "";
+    }
+  } catch (err) {
+    return "";
+  }
+};

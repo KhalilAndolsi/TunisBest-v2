@@ -2,7 +2,7 @@ import "./TheSerie.css";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Header from "../../header/Header";
-import { details, getSeasonData } from "../../../Api";
+import { details, getSeasonData, getTrailer } from "../../../Api";
 import Footer from "../../footer/Footer";
 import { Link } from "react-router-dom";
 
@@ -12,10 +12,14 @@ function TheSerie() {
   const [trailerHide, setTrailerHide] = useState(false);
   const [seasonData, setSeasonData] = useState([]);
   const [episodeData, setEpisodeData] = useState([]);
+  const [trailer, setTrailer] = useState("");
 
   useEffect(() => {
     details("tv", id)
       .then((data) => setData(data))
+      .catch((err) => console.error(err));
+    getTrailer(id, "tv")
+      .then((url) => setTrailer(url))
       .catch((err) => console.error(err));
   }, [id]);
 
@@ -72,8 +76,7 @@ function TheSerie() {
             className="cover"
             style={{
               backgroundImage: `url(https://image.tmdb.org/t/p/w500${data.backdrop_path})`,
-            }}
-          >
+            }}>
             <div className="infos">
               <div className="poster">
                 <img
@@ -110,8 +113,7 @@ function TheSerie() {
                             : ""
                           : ""
                       }
-                      onClick={addToFavorites}
-                    >
+                      onClick={addToFavorites}>
                       <i className="fa-solid fa-heart"></i>
                     </button>
                     <button type="button">
@@ -123,27 +125,26 @@ function TheSerie() {
                   </div>
                 </div>
                 <div className="trailer">
-                  <button
-                    type="button"
-                    className="show"
-                    title="trailer"
-                    onClick={() => setTrailerHide(!trailerHide)}
-                  >
-                    <i className="fa-regular fa-circle-play"></i>Watch Trailer
-                  </button>
+                  {trailer && (
+                    <button
+                      type="button"
+                      className="show"
+                      title="trailer"
+                      onClick={() => setTrailerHide(!trailerHide)}>
+                      <i className="fa-regular fa-circle-play"></i>Watch Trailer
+                    </button>
+                  )}
                   {trailerHide ? (
                     <div className={`trailerVideo`}>
                       <button
                         type="button"
-                        onClick={() => setTrailerHide(!trailerHide)}
-                      >
+                        onClick={() => setTrailerHide(!trailerHide)}>
                         <i className="fa-solid fa-xmark"></i>
                       </button>
                       <iframe
-                        src={`https://autoembed.to/tv/tmdb/${data.id}-${s}-1?trailer=1`}
+                        src={`https://www.youtube.com/embed/${trailer}`}
                         title="trailer"
-                        allowFullScreen
-                      ></iframe>
+                        allowFullScreen></iframe>
                     </div>
                   ) : undefined}
                 </div>
@@ -152,7 +153,7 @@ function TheSerie() {
           </div>
           <div className="container movieWatchSpace">
             <iframe
-              src={`https://autoembed.to/tv/tmdb/${data.id}-${s}-${ep}`}
+              src={`https://autoembed.co/tv/tmdb/${data.id}-${s}-${ep}`}
               allowFullScreen
               title="movie"
               id="wFrame"
@@ -164,8 +165,7 @@ function TheSerie() {
                     <Link
                       to={`/series/${id}/${s.season_number}/${ep}`}
                       className="season"
-                      key={i}
-                    >
+                      key={i}>
                       {`Season ${s.season_number}`}
                     </Link>
                   ))}
@@ -176,11 +176,16 @@ function TheSerie() {
                         <Link
                           to={`/series/${id}/${s}/${d.episode_number}`}
                           key={i}
-                          onClick={() => window.scrollTo({
-                            top: document.getElementById("wFrame").getBoundingClientRect().top - document.body.getBoundingClientRect().top,
-                            behavior: 'smooth',
-                          })}
-                        >
+                          onClick={() =>
+                            window.scrollTo({
+                              top:
+                                document
+                                  .getElementById("wFrame")
+                                  .getBoundingClientRect().top -
+                                document.body.getBoundingClientRect().top,
+                              behavior: "smooth",
+                            })
+                          }>
                           <img
                             src={`https://image.tmdb.org/t/p/w500${d.still_path}`}
                             alt={`${d.name}`}

@@ -2,17 +2,21 @@ import React, { useEffect, useState } from "react";
 import Header from "../../header/Header";
 import Footer from "../../footer/Footer";
 import { useParams } from "react-router-dom";
-import { details } from "../../../Api";
+import { details, getTrailer } from "../../../Api";
 import "./TheMovie.css";
 
 function TheMovie() {
   const { id } = useParams();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
   const [trailerHide, setTrailerHide] = useState(false);
+  const [trailer, setTrailer] = useState("");
 
   useEffect(() => {
     details("movie", id)
       .then((data) => setData(data))
+      .catch((err) => console.error(err));
+    getTrailer(id, "movie")
+      .then((url) => setTrailer(url))
       .catch((err) => console.error(err));
   }, [id]);
 
@@ -26,8 +30,8 @@ function TheMovie() {
           watched: false,
           type: "movie",
           img: data.poster_path,
-          rate: (data.vote_average).toFixed(1),
-          title: data.title
+          rate: data.vote_average.toFixed(1),
+          title: data.title,
         })
       );
     } else {
@@ -43,14 +47,13 @@ function TheMovie() {
   return (
     <>
       <Header />
-      {data.length !== 0 ? (
+      {data && (
         <div className="TheMovie">
           <div
             className="cover"
             style={{
               backgroundImage: `url(https://image.tmdb.org/t/p/w500${data.backdrop_path})`,
-            }}
-          >
+            }}>
             <div className="infos">
               <div className="poster">
                 <img
@@ -87,8 +90,7 @@ function TheMovie() {
                             : ""
                           : ""
                       }
-                      onClick={addToFavorites}
-                    >
+                      onClick={addToFavorites}>
                       <i className="fa-solid fa-heart"></i>
                     </button>
                     <button type="button">
@@ -100,27 +102,27 @@ function TheMovie() {
                   </div>
                 </div>
                 <div className="trailer">
-                  <button
-                    type="button"
-                    className="show"
-                    title="trailer"
-                    onClick={() => setTrailerHide(!trailerHide)}
-                  >
-                    <i className="fa-regular fa-circle-play"></i>Watch Trailer
-                  </button>
+                  {
+                    trailer &&
+                    <button
+                      type="button"
+                      className="show"
+                      title="trailer"
+                      onClick={() => setTrailerHide(!trailerHide)}>
+                      <i className="fa-regular fa-circle-play"></i>Watch Trailer
+                    </button>
+                  }
                   {trailerHide ? (
                     <div className={`trailerVideo`}>
                       <button
                         type="button"
-                        onClick={() => setTrailerHide(!trailerHide)}
-                      >
+                        onClick={() => setTrailerHide(!trailerHide)}>
                         <i className="fa-solid fa-xmark"></i>
                       </button>
                       <iframe
-                        src={`https://autoembed.to/movie/imdb/${data.imdb_id}?trailer=1`}
+                        src={`https://www.youtube.com/embed/${trailer}`}
                         title="trailer"
-                        allowFullScreen
-                      ></iframe>
+                        allowFullScreen></iframe>
                     </div>
                   ) : undefined}
                 </div>
@@ -129,13 +131,12 @@ function TheMovie() {
           </div>
           <div className="container movieWatchSpace">
             <iframe
-              src={`https://autoembed.to/movie/tmdb/${data.id}`}
+              src={`https://autoembed.co/movie/tmdb/${id}`}
               allowFullScreen
-              title="movie"
-            ></iframe>
+            />
           </div>
         </div>
-      ) : undefined}
+      )}
       <Footer />
     </>
   );
